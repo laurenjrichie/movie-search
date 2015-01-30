@@ -52,13 +52,16 @@ function setHtmlId(jsonData) {
 
 function clickTitle() {
   $("#movie_results").on("click", "a", function() { // how to not have it work when you click to the right as well?
-    $("#single_movie").empty();
+    $("#image").empty();
+    $("#info").empty();
     var url = "http://www.omdbapi.com/?i=" + $(this).parent().parent().attr('data-imdbId'); // this.data
     $.ajax(url,
       {dataType: 'json'}
     ).done(function(data) {
-      $("#single_movie").append("<img>"); // first make element then append it
-      $("img").attr('src', data["Poster"]);
+      var imageElement = "<img src='" + data["Poster"] + "'>"
+      var infoElement = "<p>info here</p>";
+      $("#image").append(imageElement);
+      $("#info").append(infoElement);
     });
   });
 }

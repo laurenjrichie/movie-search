@@ -2,16 +2,15 @@ $(document).ready(function() {
   init();
 });
 
-var submit = $("input[type='submit']");
-
 function init() {
+  submit = $("div#submit");
   clickSubmit();
   clickTitle();
 }
 
 function clickSubmit() {
   submit.click(function() {
-    createUl();
+    $("#movie_results").append("<h2>Results</h2><div class='ui list'></div>");
     ajaxRequest(setUrl());
   })
 }
@@ -20,20 +19,19 @@ function listTitles(jsonData) {
   // $("#movie_results").empty();
   for(var i = 0; i < jsonData["Search"].length; i++) {
     var title = jsonData["Search"][i].Title;
-    // build li with id and text then append, i.e.make element then append
-    $("ul").append("<li></li>");
-    $("li").last().html(title);
+    var movieList = "\
+      <div class='item'>\
+        <div class='content'>\
+          <a class='header'>" + title + "</a>\
+        </div>\
+      </div>"
+    $("div.ui.list").append(movieList);
   }
 }
 
 function setUrl() {
   var input = $("input[type='text']").val();
   return "http://www.omdbapi.com/?s=" + input;
-}
-
-function createUl() {
-  $("#movie_results").append("<h2>Results</h2>");
-  $("#movie_results").append("<ul></ul>");
 }
 
 function ajaxRequest(url) { // make API call
@@ -48,14 +46,14 @@ function ajaxRequest(url) { // make API call
 function setHtmlId(jsonData) {
   for(var i = 0; i < jsonData["Search"].length; i++) {
     var imdbId = jsonData["Search"][i].imdbID;
-    $($('li')[i]).attr('data-imdbId', imdbId);
+    $($('div.item')[i]).attr('data-imdbId', imdbId);
   }
 }
 
 function clickTitle() {
-  $("#movie_results").on("click", "li", function() {
+  $("#movie_results").on("click", "a", function() { // how to not have it work when you click to the right as well?
     $("#single_movie").empty();
-    var url = "http://www.omdbapi.com/?i=" + $(this).attr('data-imdbId'); // this.data
+    var url = "http://www.omdbapi.com/?i=" + $(this).parent().parent().attr('data-imdbId'); // this.data
     $.ajax(url,
       {dataType: 'json'}
     ).done(function(data) {

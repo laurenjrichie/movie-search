@@ -13,3 +13,11 @@
  *= require_tree .
  *= require_self
  */
+
+#favorites_section {
+  margin-top: 40px;
+}
+
+.card {
+  height: 550px;
+}
